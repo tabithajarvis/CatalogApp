@@ -119,8 +119,9 @@ def deleteCategory(category_id):
 @app.route('/catalog/<int:category_id>/items')
 def showCategory(category_id):
     """Show all items in a category."""
+    category = getCategory(category_id)
     items = getCategoryItems(category_id)
-    render_template("category.html", items=items)
+    return render_template("category.html", category=category, items=items)
 
 
 @app.route('/catalog/<int:category_id>/items/JSON')
@@ -138,13 +139,13 @@ def newItem(category_id):
             name=request.form['name'],
             description=request.form['description'],
             picture=request.form['picture'],
-            user=getUser(),
-            category=getCategory(category_id)
+            category=getCategory(category_id),
+            user=getCurrentUser()
             )
         session.add(item)
         session.commit()
         flash("%s Created" % item.name)
-        return redirect(url_for('showItem'), item=item)
+        return redirect(url_for('showItem', category_id=category_id, item_id=item.id))
     else:
         category = getCategory(category_id)
         return render_template("new_item.html", category=category)
@@ -178,7 +179,7 @@ def editItem(category_id, item_id):
         session.add(item)
         session.commit()
         flash("%s Updated" % item.name)
-        return redirect(url_for('showItem'), item=item)
+        return redirect(url_for('showItem', item=item))
     else:
         item = getItem(item_id)
         return render_template("edit_item.html", item=item)
@@ -196,7 +197,7 @@ def deleteItem(category_id, item_id):
         session.delete(item)
         session.commit()
         flash("%s Deleted." % item.name)
-        return redirect(url_for("showCategory"), category=category)
+        return redirect(url_for("showCategory", category=category))
     else:
         # TODO: Add check here for if category would be empty after delete.
         #  If so, delete category.

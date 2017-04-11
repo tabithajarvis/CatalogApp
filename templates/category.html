@@ -23,7 +23,7 @@
 
     {% for item in items %}
         <h2>{{item.name}}</h2>
-        <img src='{{item.picture}}' alt='picture of {{item.name}}'></img>
+        <img src='{{item.picture}}' alt='picture of {{item.name}}' />
         <p>{{item.description}}</p>
         <a href="/catalog/{{item.category_id}}/items/{{item.id}}/edit">Edit</a>
         <a href="/catalog/{{item.category_id}}/items/{{item.id}}/delete">Delete</a>
