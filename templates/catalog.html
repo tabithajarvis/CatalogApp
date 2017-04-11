@@ -18,8 +18,8 @@
 
     {% for category in categories %}
         <h2><a href='/catalog/{{category.id}}/menu'>{{category.name}}</a></h2>
-        <a href="/catalog/{{catalog.id}}/edit">Edit</a>
-        <a href="/catalog/{{catalog.id}}/delete">Delete</a>
+        <a href="/catalog/{{category.id}}/edit">Edit</a>
+        <a href="/catalog/{{category.id}}/delete">Delete</a>
     {% endfor %}
 
   </body>

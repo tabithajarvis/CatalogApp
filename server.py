@@ -6,7 +6,7 @@ used to manage a catalog of items.
 """
 
 from flask import \
-    Flask, request, render_template, jsonify  # , redirect, url_for, flash
+    Flask, request, render_template, jsonify, redirect, flash, url_for
 
 from cdb_setup import User, Category, Item
 
@@ -43,6 +43,13 @@ def getUser(id):
     return session.query(User).filter(User.id == id).first()
 
 
+def getCurrentUser():
+    """Get the current user."""
+    # TODO: fix.  This currently only returns the first user
+    # return getUser(GET_USER_ID_FROM_COOKIE)
+    return session.query(User).first()
+
+
 # Authorization routing
 @app.route('/login')
 def showLogin():
@@ -70,7 +77,11 @@ def showCatalogJSON():
 def newCategory():
     """Handle the addition of new categories."""
     if request.method == 'POST':
-        return "Post for New Category"
+        category = Category(name=request.form['name'])
+        session.add(category)
+        session.commit()
+        flash("%s Created" % category.name)
+        return redirect(url_for('showCatalog'))
     else:
         return render_template("new_category.html")
 
@@ -79,7 +90,12 @@ def newCategory():
 def editCategory(category_id):
     """Handle the editing of existing categories."""
     if request.method == 'POST':
-        return "Post for Edit Category"
+        category = getCategory(category_id)
+        category.name = request.form['name']
+        session.add(category)
+        session.commit()
+        flash("%s Updated" % category.name)
+        return redirect(url_for('showCatalog'))
     else:
         category = getCategory(category_id)
         return render_template("edit_category.html", category=category)
@@ -89,7 +105,11 @@ def editCategory(category_id):
 def deleteCategory(category_id):
     """Handle the deletion of categories."""
     if request.method == 'POST':
-        return "Post for Delete Category"
+        category = getCategory(category_id)
+        session.delete(category)
+        session.commit()
+        flash("%s Deleted" % category.name)
+        return redirect(url_for('showCatalog'))
     else:
         category = getCategory(category_id)
         return render_template("delete_category.html", category=category)
@@ -114,7 +134,17 @@ def showCategoryJSON(category_id):
 def newItem(category_id):
     """Handle the addition of new catalog items."""
     if request.method == 'POST':
-        return "Post for New Item"
+        item = Item(
+            name=request.form['name'],
+            description=request.form['description'],
+            picture=request.form['picture'],
+            user=getUser(),
+            category=getCategory(category_id)
+            )
+        session.add(item)
+        session.commit()
+        flash("%s Created" % item.name)
+        return redirect(url_for('showItem'), item=item)
     else:
         category = getCategory(category_id)
         return render_template("new_item.html", category=category)
@@ -141,7 +171,14 @@ def showItemJSON(category_id, item_id):
 def editItem(category_id, item_id):
     """Handle the editing of existing catalog items."""
     if request.method == 'POST':
-        return "Post for edit item."
+        item = getItem(item_id)
+        item.name = request.form['name']
+        item.description = request.form['description']
+        item.picture = request.form['picture']
+        session.add(item)
+        session.commit()
+        flash("%s Updated" % item.name)
+        return redirect(url_for('showItem'), item=item)
     else:
         item = getItem(item_id)
         return render_template("edit_item.html", item=item)
@@ -154,7 +191,12 @@ def editItem(category_id, item_id):
 def deleteItem(category_id, item_id):
     """Handle the deletion of catalog items."""
     if request.method == 'POST':
-        return "Post for Delete Item"
+        item = getItem(item_id)
+        category = getCategory(category_id)
+        session.delete(item)
+        session.commit()
+        flash("%s Deleted." % item.name)
+        return redirect(url_for("showCategory"), category=category)
     else:
         # TODO: Add check here for if category would be empty after delete.
         #  If so, delete category.
