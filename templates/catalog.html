@@ -1,0 +1,26 @@
+<html>
+  <body>
+    <h1>Catalog</h1>
+    <br>
+    <a href="/catalog/new">Add New Category</a>
+    <br>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li><strong>{{message}}</strong></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    {% endwith %}
+    <br>
+
+    {% for category in categories %}
+        <h2><a href='/catalog/{{category.id}}/menu'>{{category.name}}</a></h2>
+        <a href="/catalog/{{catalog.id}}/edit">Edit</a>
+        <a href="/catalog/{{catalog.id}}/delete">Delete</a>
+    {% endfor %}
+
+  </body>
+</html>

@@ -6,7 +6,9 @@ used to manage a catalog of items.
 """
 
 from flask import \
-    Flask, request  # , render_template, redirect, url_for, jsonify, flash
+    Flask, request, render_template, jsonify  # , redirect, url_for, flash
+
+from cdb_setup import User, Category, Item
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -20,11 +22,32 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
+# DB Query Helper Functions
+def getCategory(id):
+    """Get a category object by id."""
+    return session.query(Category).filter(Category.id == id).first()
+
+
+def getCategoryItems(id):
+    """Get a list of items by category id."""
+    return session.query(Item).filter(Item.category_id == id).all()
+
+
+def getItem(id):
+    """Get an item by id."""
+    return session.query(Item).filter(Item.id == id).first()
+
+
+def getUser(id):
+    """Get a user by id."""
+    return session.query(User).filter(User.id == id).first()
+
+
 # Authorization routing
 @app.route('/login')
 def showLogin():
     """Show the login page."""
-    return "Show Login Page"
+    return render_template("login.html")
 
 
 # App routing
@@ -32,13 +55,15 @@ def showLogin():
 @app.route('/catalog')
 def showCatalog():
     """Show the front page of the catalog app."""
-    return "Get for Show Catalog"
+    categories = session.query(Category).all()
+    return render_template("catalog.html", categories=categories)
 
 
 @app.route('/catalog/JSON')
 def showCatalogJSON():
     """Show the Catalog in JSON."""
-    return "Show JSON Catalog"
+    categories = session.query(Category).all()
+    return jsonify(categories=[c.serialize for c in categories])
 
 
 @app.route('/catalog/new', methods=['GET', 'POST'])
@@ -47,7 +72,7 @@ def newCategory():
     if request.method == 'POST':
         return "Post for New Category"
     else:
-        return "Get for New Category"
+        return render_template("new_category.html")
 
 
 @app.route('/catalog/<int:category_id>/edit', methods=['GET', 'POST'])
@@ -56,7 +81,8 @@ def editCategory(category_id):
     if request.method == 'POST':
         return "Post for Edit Category"
     else:
-        return "Get for Edit Category"
+        category = getCategory(category_id)
+        return render_template("edit_category.html", category=category)
 
 
 @app.route('/catalog/<int:category_id>/delete', methods=['GET', 'POST'])
@@ -65,39 +91,51 @@ def deleteCategory(category_id):
     if request.method == 'POST':
         return "Post for Delete Category"
     else:
-        return "Get for Delete Category"
+        category = getCategory(category_id)
+        return render_template("delete_category.html", category=category)
 
 
 @app.route('/catalog/<int:category_id>')
-@app.route('/catalog/<int:category_id>/menu')
+@app.route('/catalog/<int:category_id>/items')
 def showCategory(category_id):
     """Show all items in a category."""
-    return "Get for show category."
+    items = getCategoryItems(category_id)
+    render_template("category.html", items=items)
 
 
-@app.route('/catalog/<int:category_id>/menu/JSON')
+@app.route('/catalog/<int:category_id>/items/JSON')
 def showCategoryJSON(category_id):
     """Show all items in a category in JSON format."""
-    # menu = getMenu(restaurant_id)
-    # return jsonify(Menu=[m.serialize for m in menu])
+    items = getCategoryItems(category_id)
+    return jsonify(Items=[i.serialize for i in items])
 
 
-@app.route('/catalog/<int:category_id>/menu/new', methods=['GET', 'POST'])
+@app.route('/catalog/<int:category_id>/items/new', methods=['GET', 'POST'])
 def newItem(category_id):
     """Handle the addition of new catalog items."""
     if request.method == 'POST':
         return "Post for New Item"
     else:
-        return "Get for New Item"
+        category = getCategory(category_id)
+        return render_template("new_item.html", category=category)
 
 
-@app.route('/catalog/<int:category_id>/menu/<int:item_id>/JSON')
+@app.route('/catalog/<int:category_id>/items/<int:item_id>')
+def showItem(category_id, item_id):
+    """Show a catalog item."""
+    item = getItem(item_id)
+    return render_template("item.html", item=item)
+
+
+@app.route('/catalog/<int:category_id>/items/<int:item_id>/JSON')
 def showItemJSON(category_id, item_id):
     """Show a catalog item in JSON format."""
+    item = getItem(item_id)
+    return jsonify(Item=item.serialize)
 
 
 @app.route(
-    '/catalog/<int:category_id>/menu/<int:item_id>/edit',
+    '/catalog/<int:category_id>/items/<int:item_id>/edit',
     methods=['GET', 'POST']
     )
 def editItem(category_id, item_id):
@@ -105,11 +143,12 @@ def editItem(category_id, item_id):
     if request.method == 'POST':
         return "Post for edit item."
     else:
-        return "Get for edit item."
+        item = getItem(item_id)
+        return render_template("edit_item.html", item=item)
 
 
 @app.route(
-    '/catalog/<int:category_id>/item/<int:item_id>/delete',
+    '/catalog/<int:category_id>/items/<int:item_id>/delete',
     methods=['GET', 'POST']
     )
 def deleteItem(category_id, item_id):
@@ -117,7 +156,10 @@ def deleteItem(category_id, item_id):
     if request.method == 'POST':
         return "Post for Delete Item"
     else:
-        return "Get for Delete Item"
+        # TODO: Add check here for if category would be empty after delete.
+        #  If so, delete category.
+        item = getItem(item_id)
+        return render_template("delete_item.html", item=item)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,21 @@
+<html>
+  <body>
+    <h1>{{item.name}}</h1>
+
+    <br>
+    <a href='/catalog'>Back to Catalog</a>
+    <br>
+    <hr>
+    <br>
+
+    <h2>{{item.name}}</h2>
+    <img src='{{item.picture}}' alt='picture of {{item.name}}'></img>
+    <p>{{item.description}}</p>
+    <a href="/catalog/{{item.category_id}}/items/{{item.id}}/edit">Edit</a>
+    <a href="/catalog/{{item.category_id}}/items/{{item.id}}/delete">Delete</a>
+    <br>
+    <br>
+
+
+  </body>
+</html>

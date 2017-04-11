@@ -1,0 +1,23 @@
+<html>
+  <body>
+    <h1>{{item.name}}</h1>
+    <br>
+    <a href='/catalog'>Back to Catalog</a>
+    <br>
+    <a href='/catalog/{{item.category_id}}/items/{{item.id}}'>Cancel</a>
+    <br>
+    <hr>
+    <br>
+
+    <form method='POST'>
+      <h2>Delete Item: {{item.name}}</h2>
+      <img src='{{item.picture}}' alt='picture of {{item.name}}'></img>
+      <p>{{item.description}}</p>
+      <br>
+
+      <input type='submit' value='Delete Item'>
+    </form>
+
+
+  </body>
+</html>
