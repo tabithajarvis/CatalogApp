@@ -1,14 +1,17 @@
-<html>
-  <body>
-    <h1>{{item.name}}</h1>
-    <br>
-    <a href='/catalog'>Back to Catalog</a>
-    <br>
-    <a href='/catalog/{{item.category_id}}/items/{{item.id}}'>Cancel</a>
-    <br>
-    <hr>
-    <br>
+{% extends "base.html" %}
 
+{% block title %}Edit Item : {{item.name}}{% endblock %}
+
+{% block menu %}
+    <a href='/catalog'>
+      <h4>Back to Catalog</h4>
+    </a>
+    <a href='/catalog/{{item.category_id}}/items/{{item.id}}'>
+      <h4>Cancel</h4>
+    </a>
+{% endblock %}
+
+{% block content %}
     <form method='POST'>
       <h2>Edit Item: {{item.name}}</h2>
       <br>
@@ -30,6 +33,4 @@
       <input type='submit' value='Edit Item'>
     </form>
 
-
-  </body>
-</html>
+{% endblock %}

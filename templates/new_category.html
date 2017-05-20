@@ -1,19 +1,20 @@
-<html>
-  <body>
-    <h1>New Category</h1>
-    <br>
-    <a href='/catalog'>Back to Catalog</a>
-    <br>
-    <a href='/catalog'>Cancel</a>
-    <br>
-    <hr>
-    <br>
+{% extends "base.html" %}
+{% block title %}New Category{%endblock%}
 
+{% block menu %}
+    <a href='/catalog'>
+      <h3>Back to Catalog<h3>
+    </a>
+    <a href='/catalog'>
+      <h3>Cancel</h3>
+    </a>
+{% endblock %}
+
+{% block content %}
     <form method='POST'>
-      <h2>Category Name</h2>
-      <input type='text' name='name' type='text'>
-      <input type='submit' value='Enter New Category'>
+      <h4>Category Name:
+        <input type='text' name='name' type='text'>
+        <input type='submit' value='Enter New Category'>
+      </h4>
     </form>
-
-  </body>
-</html>
+{% endblock %}

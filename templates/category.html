@@ -1,36 +1,35 @@
-<html>
-  <body>
-    <h1>{{category.name}}</h1>
+{% extends "base.html" %}
+{% block title%}{{category.name}}{% endblock %}
 
-    <br>
-    <a href='/catalog'>Back to Catalog</a>
-    <br>
-    <a href='/catalog/{{category.id}}/items/new'>Add Item</a>
-    <br>
-    <hr>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-      <ul>
-        {% for message in messages %}
-          <li><strong>{{message}}</strong></li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-    {% endwith %}
-    <br>
+{% block menu %}
+    <a href='/catalog'>
+      <h4>Back to Catalog</h4>
+    </a>
+    <a href='/catalog/{{category.id}}/items/new'>
+      <h4>Add Item</h4>
+    </a>
+    <a href="/catalog/{{category.id}}/edit">
+      <h4>Edit</h4>
+    </a>
+    <a href="/catalog/{{category.id}}/delete">
+      <h4>Delete</h4>
+    </a>
+{% endblock %}
 
-
-
-    {% for item in items %}
-        <h2>{{item.name}}</h2>
-        <img src='{{item.picture}}' alt='picture of {{item.name}}' />
-        <p>{{item.description}}</p>
-        <a href="/catalog/{{item.category_id}}/items/{{item.id}}/edit">Edit</a>
-        <a href="/catalog/{{item.category_id}}/items/{{item.id}}/delete">Delete</a>
-        <br>
-        <br>
-    {% endfor %}
-
-
-  </body>
-</html>
+{% block content %}
+<div class="category">
+  {% for item in items %}
+    <a href="/catalog/{{item.category_id}}/items/{{item.id}}">
+      <h3>{{item.name}}</h3>
+    </a>
+    <span class="item">
+      <div class="item-pic">
+        <a href="/catalog/{{item.category_id}}/items/{{item.id}}">
+          <img src='{{item.picture}}' alt='picture of {{item.name}}' />
+        </a>
+      </div>
+      <p class="item-description">{{item.description}}</p>
+    </span>
+  {% endfor %}
+</div>
+{% endblock %}

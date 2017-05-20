@@ -1,26 +1,19 @@
-<html>
-  <body>
-    <h1>Catalog</h1>
-    <br>
-    <a href="/catalog/new">Add New Category</a>
-    <br>
-    <hr>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-      <ul>
-        {% for message in messages %}
-          <li><strong>{{message}}</strong></li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-    {% endwith %}
-    <br>
+{% extends "base.html" %}
 
-    {% for category in categories %}
-        <h2><a href='/catalog/{{category.id}}/items'>{{category.name}}</a></h2>
-        <a href="/catalog/{{category.id}}/edit">Edit</a>
-        <a href="/catalog/{{category.id}}/delete">Delete</a>
-    {% endfor %}
-
-  </body>
-</html>
+{% block content %}
+{% for category in categories %}
+  <div class="category">
+    <h2><a href='/catalog/{{category.id}}/items'>{{category.name}}</a></h2>
+    <span class="item">
+      {% for item in items[category.name] %}
+        <div class="item-container">
+          <a href="/catalog/{{item.category_id}}/items/{{item.id}}">
+            <h3>{{item.name}}</h3>
+            <img src='{{item.picture}}' alt='picture of {{item.name}}' />
+          </a>
+        </div>
+      {% endfor %}
+    </span>
+  </div>
+{% endfor %}
+{% endblock %}

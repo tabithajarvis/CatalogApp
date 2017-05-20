@@ -1,20 +1,20 @@
-<html>
-  <body>
-    <h1>Edit Category</h1>
-    <br>
-    <a href='/catalog'>Back to Catalog</a>
-    <br>
-    <a href='/catalog/{{category.id}}'>Cancel</a>
-    <br>
-    <hr>
-    <br>
+{% extends "base.html" %}
 
+{% block title %}Edit Category{% endblock %}
+
+{% block menu %}
+    <a href='/catalog'>
+      <h4>Back to Catalog</h4>
+    </a>
+    <a href='/catalog/{{category.id}}'>
+      <h4>Cancel</h4>
+    </a>
+{% endblock %}
+
+{% block content %}
     <form method='POST'>
-      <h2>Category Name</h2>
+      <h3>Category Name</h3>
       <input type='text' name='name' type='text' placeholder='{{category.name}}'>
       <input type='submit' value='Edit Category'>
     </form>
-
-
-  </body>
-</html>
+{% endblock %}

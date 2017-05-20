@@ -1,21 +1,19 @@
-<html>
-  <body>
-    <h1>{{item.name}}</h1>
+{% extends "base.html" %}
+{% block title %}{{category.name}} : {{item.name}}{% endblock %}
 
-    <br>
-    <a href='/catalog'>Back to Catalog</a>
-    <br>
-    <hr>
-    <br>
+{% block menu %}
+  <a href='/catalog'>
+    <h4>Back to Catalog</h4>
+  </a>
+  <a href="/catalog/{{item.category_id}}/items/{{item.id}}/edit">
+    <h4>Edit</h4>
+  </a>
+  <a href="/catalog/{{item.category_id}}/items/{{item.id}}/delete">
+    <h4>Delete</h4>
+  </a>
+{% endblock %}
 
-    <h2>{{item.name}}</h2>
-    <img src='{{item.picture}}' alt='picture of {{item.name}}'></img>
-    <p>{{item.description}}</p>
-    <a href="/catalog/{{item.category_id}}/items/{{item.id}}/edit">Edit</a>
-    <a href="/catalog/{{item.category_id}}/items/{{item.id}}/delete">Delete</a>
-    <br>
-    <br>
-
-
-  </body>
-</html>
+{% block content %}
+  <img src='{{item.picture}}' alt='picture of {{item.name}}'></img>
+  <p>{{item.description}}</p>
+{% endblock %}

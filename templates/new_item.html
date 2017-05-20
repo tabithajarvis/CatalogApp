@@ -1,14 +1,13 @@
-<html>
-  <body>
-    <h1>Add New Item</h1>
-    <br>
+{% extends "base.html" %}
+{% block title%}{{category.name}} : Add New Game{% endblock%}
+
+{% block menu %}
     <a href='/catalog'>Back to Catalog</a>
     <br>
     <a href='/catalog/{{category.id}}/items'>Cancel</a>
-    <br>
-    <hr>
-    <br>
+{% endblock %}
 
+{% block content %}
     <form method='POST'>
       <h3>Name</h3>
       <input type='text' name='name' type='text'>
@@ -26,7 +25,4 @@
       <br>
       <input type='submit' value='Enter New Item'>
     </form>
-
-
-  </body>
-</html>
+{% endblock %}

@@ -20,6 +20,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     picture = Column(String(250))
+    email = Column(String(250), nullable=False)
 
     @property
     def serialize(self):
@@ -27,7 +28,7 @@ class User(Base):
         return {
             'name': self.name,
             'id': self.id,
-            'picture': self.picture
+            'email': self.email
         }
 
 
@@ -70,8 +71,8 @@ class Item(Base):
         return {
             'name': self.name,
             'id': self.id,
+            'category': self.category.name,
             'description': self.description,
-            'picture': self.picture
         }
 
 

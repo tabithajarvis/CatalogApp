@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="//apis.google.com/js/platform.js?onload=start"></script>
+    <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Vast+Shadow" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css"/>
+  </head>
+
+  <body>
+    <div class="header">
+      <a href="/catalog">
+        <h1>Game Gatherer</h1>
+      </a>
+      <h2>
+        {% block title %}
+        {% endblock %}
+      </h2>
+    </div>
+
+    {% if user %}
+      <a href="/logout">
+        <h4 class="logging">Log Out</h4>
+      </a>
+    {% else %}
+      <a href="/login">
+        <h4 class="logging">Log In</4>
+      </a>
+    {% endif %}
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <ul class="flash">
+        {% for message in messages %}
+          <li><strong>{{message}}</strong></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    {% endwith %}
+
+    <div class="body">
+    {% block body %}
+      <div class="menu">
+        {% block menu %}
+        <a href="/catalog/new">
+          <h4>Add New Category</h4>
+        </a>
+        {% endblock %}
+      </div>
+
+      <div class="content">
+        {% block content %}
+        {% endblock %}
+      </div>
+    {% endblock %}
+    </div>
+
+  </body>
+</html>
