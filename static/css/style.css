@@ -89,12 +89,24 @@ img {
   border-top: 1px solid #73AD21;
 }
 
+.item-row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.item-in-row {
+  flex: auto;
+  max-width: 33.3%;
+}
+
 .item {
   display: flex;
 }
+
 .item-pic {
   flex: auto;
-  min-width: 33.3%;
+  max-width: 33.3%;
 }
 
 .item-description {

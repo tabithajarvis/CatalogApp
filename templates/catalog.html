@@ -4,14 +4,14 @@
 {% for category in categories %}
   <div class="category">
     <h2><a href='/catalog/{{category.id}}/items'>{{category.name}}</a></h2>
-    <span class="item">
+      <span class="item-row">
       {% for item in items[category.name] %}
-        <div class="item-container">
-          <a href="/catalog/{{item.category_id}}/items/{{item.id}}">
-            <h3>{{item.name}}</h3>
-            <img src='{{item.picture}}' alt='picture of {{item.name}}' />
-          </a>
-        </div>
+          <div class="item-pic">
+              <a href="/catalog/{{item.category_id}}/items/{{item.id}}">
+                <h3>{{item.name}}</h3>
+                <img src='{{item.picture}}' alt='picture of {{item.name}}' />
+              </a>
+          </div>
       {% endfor %}
     </span>
   </div>

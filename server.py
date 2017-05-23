@@ -1,8 +1,8 @@
 """
-Catalog Server.
+Game Gatherer : Board Game Catalog Server.
 
-This module runs the server for the Catalog web app.  The Catalog web app is
-used to manage a catalog of items.
+This module runs the server for the Game Gatherer web app.  The Game Gatherer
+web app is used to manage a catalog of board games.
 """
 
 from flask import \
@@ -36,7 +36,7 @@ session = DBSession()
 # Create client id for oauth
 CLIENT_ID = json.loads(
     open('client_secret.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "Catalog App"
+APPLICATION_NAME = "Game Gatherer"
 
 
 # DB Query Helper Functions
@@ -72,7 +72,9 @@ def getUser(**kw):
 
 def getCurrentUser():
     """Get the current user."""
-    return session.query(User).filter_by(email=login_session.get('email')).first()
+    return session.query(User).filter_by(
+        email=login_session.get('email')
+        ).first()
 
 
 # JSON helper functions
@@ -176,16 +178,22 @@ def owns_item(f):
         item = getItem(kw['item_id'])
         if not item:
             flash("The item specified in the URL does not exist.")
-            return redirect(url_for('showCategory', category_id=kw['category_id']))
+            return redirect(
+                url_for('showCategory', category_id=kw['category_id'])
+                )
 
         user = getCurrentUser()
 
         if not user:
             flash("You must be logged in to perform this action.")
-            redirect(url_for('showLogin'))
+            return redirect(url_for('showLogin'))
         elif not user.id == item.user_id:
             flash("You cannot edit items created by other users")
-            redirect(url_for('showItem'), category_id=kw['category_id'], item_id=kw['item_id'])
+            return redirect(
+                url_for('showItem'),
+                category_id=kw['category_id'],
+                item_id=kw['item_id']
+                )
         else:
             return f(**kw)
     return wrapper
@@ -210,9 +218,6 @@ def disconnect():
             gdisconnect()
             del login_session['gplus_id']
             del login_session['credentials']
-        if login_session['provider'] == 'facebook':
-            fbdisconnect()
-            del login_session['facebook_id']
         del login_session['username']
         del login_session['email']
         del login_session['picture']
@@ -321,7 +326,12 @@ def showCatalog():
     items = dict()
     for category in categories:
         items[category.name] = getCategoryItems(category.id)
-    return render_template("catalog.html", categories=categories, user=getCurrentUser(), items=items)
+    return render_template(
+        "catalog.html",
+        categories=categories,
+        user=getCurrentUser(),
+        items=items
+        )
 
 
 @app.route('/catalog/JSON')
@@ -491,7 +501,7 @@ def deleteItem(category_id, item_id):
 @app.route('/catalog/<int:category_id>/items/<int:item_id>/delete',
            methods=['POST'])
 @owns_item
-def deleteItem(category_id, item_id):
+def deleteItemPost(category_id, item_id):
     """Handle the deletion of catalog items."""
     item = getItem(item_id)
     category = getCategory(category_id)
